@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<style>
+		img {
+			width: 200px;
+			height: 100px;
+		}
+	</style>
+
+	<body>
+		<img
+			src="./images/Mask-group.png"
+			alt="tulip"
+			id="beidou-bg1"
+			style="margin-left: 0px"
+		/>
+		<img
+			src="./images/beidou-text.png"
+			alt="tulip"
+			id="beidou-text"
+			style="margin-left: 0px"
+		/>
+		<img
+			src="./images/image_7.png"
+			alt="tulip"
+			id="beidou-image"
+			style="margin-left: 0px"
+		/>
+		<img
+			src="./images/mini-code.png"
+			alt="tulip"
+			id="mini-code"
+			style="margin-left: 0px"
+		/>
+		<img
+			src="./images/avatar.png"
+			alt="tulip"
+			id="beidou-avatar"
+			style="margin-left: 0px"
+		/>
+		<hr />
+		<canvas
+			id="myCanvas"
+			width="350"
+			height="500"
+			style="border: 1px solid #d3d3d3"
+		>
+			Your browser does not support the HTML5 canvas tag.</canvas
+		>
+	</body>
+	<script>
+		const c = document.getElementById('myCanvas')
+		const ctx = c.getContext('2d')
+		// ctx.fillStyle="#0000ff";
+		// ctx.fillRect(20,20,300,200
+
+		/**
+		 *
+		 * @param {*} x 起始x坐标
+		 * @param {*} y 起始y坐标
+		 * @param {*} width 矩形宽度
+		 * @param {*} height 矩形高度
+		 * @param {*} r 矩形圆角
+		 * @param {*} bgcolor 矩形填充颜色
+		 * @param {*} lineColor 矩形边框颜色
+		 */
+		function rectangle(ctx, x, y, width, height, r, bgcolor, lineColor) {
+			// console.log('ctxaa', ctx)
+			ctx.beginPath()
+			ctx.moveTo(x + r, y)
+			ctx.lineTo(x + width - r, y)
+			ctx.arc(x + width - r, y + r, r, Math.PI * 1.5, Math.PI * 2)
+			ctx.lineTo(x + width, y + height - r)
+			ctx.arc(x + width - r, y + height - r, r, 0, Math.PI * 0.5)
+			ctx.lineTo(x + r, y + height)
+			ctx.arc(x + r, y + height - r, r, Math.PI * 0.5, Math.PI)
+			ctx.lineTo(x, y + r)
+			ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5)
+			ctx.fillStyle = bgcolor
+			ctx.strokeStyle = lineColor
+			ctx.fill()
+			ctx.stroke()
+			ctx.closePath()
+		}
+
+		// 绘制 canvas
+		const drawSharePopup = async () => {
+			const bg1 = document.querySelector('#beidou-bg1')
+			const text = document.querySelector('#beidou-text')
+			const image = document.querySelector('#beidou-image')
+			const miniCode = document.querySelector('#mini-code')
+			const avatar = document.querySelector('#beidou-avatar')
+
+			// 先绘制圆角矩形背景
+			rectangle(ctx, 0, 0, 300, 450, 8, '#fff', '#fff')
+			// 绘制顶部背景
+			bg1.onload = () => {
+				ctx.drawImage(bg1, 0, 0, 590, 224, 0, 0, 300, 112)
+			}
+			// 绘制【北斗生活】
+			text.onload = () => {
+				ctx.drawImage(text, 0, 0, 245, 60, 88, 20, 124, 44)
+			}
+			// 绘制直线
+			ctx.moveTo(88, 84)
+			ctx.lineTo(212, 84)
+			ctx.lineWidth = 1 // 设置线的宽度，单位是像素
+			ctx.strokeStyle = '#06124E' //设置线的颜色
+			ctx.stroke()
+			// 绘制文字【有品质。。。】
+			const info = `有品质·有温度·有关爱`
+			ctx.font = 12 + 'px'
+			ctx.fillStyle = '#37499e'
+			ctx.fillText(info, 100, 105) //描绘文本
+			// 绘制商品主图
+			image.onload = () => {
+				// ctx.restore()
+				ctx.drawImage(image, 0, 130, 300, 205)
+			}
+			// 绘制小程序二维码
+			miniCode.onload = () => {
+				ctx.save() // 先保存状态 已便于画完圆再用
+				ctx.beginPath() // 开始绘制
+				// 先画个圆
+				ctx.arc(37, 400, 17, 0, Math.PI * 2, false)
+				// ctx.stroke() // 加入 stroke 就会直接将园绘制出来
+				ctx.clip() // 画了圆 再剪切  原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+				ctx.drawImage(miniCode, 37 - 17, 400 - 17, 34, 34) // 描绘图片 // 第一个参数是图片 第二、三是图片在画布位置 第四、五是将图片绘制成多大宽高（不写四五就是原图宽高）
+				ctx.restore() // 恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
+			}
+			// 绘制文本【邀您一起共享好物】
+			const info2 = `邀您一起共享好物`
+			ctx.font = 12 + 'px'
+			ctx.fillStyle = '#6a7385'
+			ctx.fillText(info2, 37 + 17 + 8, 402) // 描绘文本
+			// 绘制用户头像
+			avatar.onload = () => {
+				ctx.save() // 先保存状态 已便于画完圆再用
+				ctx.beginPath() // 开始绘制
+				// 先画个圆
+				ctx.arc(260, 400, 22, 0, Math.PI * 2, false)
+				// ctx.stroke() // 加入 stroke 就会直接将园绘制出来
+				ctx.clip() // 画了圆 再剪切  原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+				ctx.drawImage(avatar, 260 - 22, 400 - 22, 44, 44) // 描绘图片 // 第一个参数是图片 第二、三是图片在画布位置 第四、五是将图片绘制成多大宽高（不写四五就是原图宽高）
+				ctx.restore() // 恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
+			}
+		}
+
+		drawSharePopup()
+	</script>
+</html>
+<!-- 0 -->
